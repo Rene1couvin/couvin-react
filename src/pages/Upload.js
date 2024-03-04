@@ -56,7 +56,7 @@ const UploadForm = () => {
       <div className="grid grid-cols-4 gap-4">
         {/* Form */}
         <div className="col-span-4 mb-8">
-          <label className="block mb-2 text-sm font-bold">Title:</label>
+          <label className="block mb-2 text-sm font-bold">My Title:</label>
           <input
             type="text"
             value={title}
