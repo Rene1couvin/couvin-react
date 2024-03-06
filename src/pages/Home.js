@@ -15,7 +15,7 @@ import React, { useState, useEffect } from "react";
 function BackgroundSwitcher() {
   const [currentImage, setCurrentImage] = useState(a1);
   const images = [a1, a2, a3, a4];
-
+    
   useEffect(() => {
     // Switch images every 3 seconds (adjust as needed)
     const interval = setInterval(() => {

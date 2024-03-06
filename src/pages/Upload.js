@@ -1,35 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const UploadForm = () => {
   const [title, setTitle] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(null);
   const [description, setDescription] = useState('');
   const [uploadedData, setUploadedData] = useState([]);
+  useEffect(() => {
+    // Fetch existing data from the database when the component mounts
+    fetchData();
+  }, []);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/pics/');
+      setUploadedData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const handleUpload = async () => {
-    // Validate if all fields are filled
+  
     if (!title || !image || !description) {
       alert('Please fill in all fields.');
       return;
     }
 
-    // Create a new FormData object to handle file upload
+  
     const formData = new FormData();
     formData.append('title', title);
     formData.append('image', image);
     formData.append('description', description);
 
     try {
-      // Make a POST request to the Django server
-      const response = await fetch('http://127.0.0.1:8000/pics/', {
-        method: 'POST',
-        body: formData,
+  
+      const response = await axios.post('http://127.0.0.1:8000/pics/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
-      if (response.ok) {
+      if (response.status === 201) {
         // If the request is successful, update the UI with the saved data
-        const responseData = await response.json();
-        setUploadedData([...uploadedData, responseData]);
+        setUploadedData([...uploadedData, response.data]);
       } else {
         // Handle error if the request is not successful
         alert('Failed to upload data. Please try again.');
@@ -40,7 +53,7 @@ const UploadForm = () => {
 
     // Clear the form fields
     setTitle('');
-    setImage('');
+    setImage(null);
     setDescription('');
   };
 
